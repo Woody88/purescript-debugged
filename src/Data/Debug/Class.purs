@@ -23,15 +23,17 @@ import Data.Map (Map)
 import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Monoid (power)
+import Data.Newtype (unwrap)
 import Data.Set (Set)
 import Data.Set as Set
 import Data.String as String
+import Data.String.CaseInsensitive (CaseInsensitiveString)
 import Data.Symbol (class IsSymbol, SProxy(..), reflectSymbol)
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Prim.Row as Row
-import Record (get, delete)
 import Prim.RowList (class RowToList, RowList, Nil, Cons)
+import Record (get, delete)
 import Type.Data.RowList (RLProxy(..))
 
 -- | Ideally, all types of kind `Type` should have an instance of this class.
@@ -57,6 +59,8 @@ diffWith opts x y = D.diffReprWith opts (debug x) (debug y)
 diff :: forall a. Debug a => a -> a -> D.ReprDelta
 diff = diffWith D.defaultDiffOptions
 
+instance debugCaseInsensitiveString :: Debug CaseInsensitiveString where
+  debug = D.string <<< unwrap
 -------------------------------------------------------------------------------
 -- Prim
 
